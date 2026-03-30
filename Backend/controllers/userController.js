@@ -63,7 +63,7 @@ export const getAllUsers = async (req, res) => {
       profileComplete: true
     }).select('-password');
 
-    res.status(200).json(users);
+    res.status(200).json(users); 
 
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
