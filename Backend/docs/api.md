@@ -10,165 +10,164 @@ http://localhost:5000/api
 
 # 🔑 Authentication
 
-## 📝 Register User
+🚀 PHASE 0: Start Your Backend
+✅ Step 0.1: Open terminal in your backend folder
+cd Backend
+✅ Step 0.2: Start server
+npm run dev
 
-**POST** `/auth/register`
+OR
 
-### Request Body
+node server.js
+✅ Step 0.3: Confirm server is running
 
-```json
+You should see something like:
+
+Server running on port 5000
+MongoDB connected
+
+👉 If not → STOP and fix this first
+
+🚀 PHASE 1: Open Thunder Client
+✅ Step 1.1
+Open VS Code
+Click Thunder Client (⚡ icon)
+Click New Request
+🚀 PHASE 2: Register Users
+✅ Step 2.1: Create User 1
+Method:
+POST
+URL:
+http://localhost:5000/api/auth/register
+Body → JSON:
 {
-  "name": "Amogh",
-  "email": "amogh@gmail.com",
+  "name": "User One",
+  "email": "user1@example.com",
   "password": "123456"
 }
-```
 
-### Response
+👉 Click Send
 
-```json
+✅ Step 2.2: Create User 2
 {
-  "_id": "user_id",
-  "name": "Amogh",
-  "email": "amogh@gmail.com",
-  "token": "jwt_token"
-}
-```
-
----
-
-## 🔑 Login User
-
-**POST** `/auth/login`
-
-### Request Body
-
-```json
-{
-  "email": "amogh@gmail.com",
+  "name": "User Two",
+  "email": "user2@example.com",
   "password": "123456"
 }
-```
-
-### Response
-
-```json
+✅ Step 2.3: Create User 3
 {
-  "_id": "user_id",
-  "name": "Amogh",
-  "email": "amogh@gmail.com",
-  "token": "jwt_token"
+  "name": "User Three",
+  "email": "user3@example.com",
+  "password": "123456"
 }
-```
-
----
-
-# 👤 User Routes
-
-## 🔒 Authorization Header (Required for Protected Routes)
-
-```
-Authorization: Bearer <token>
-```
-
----
-
-## 👤 Get My Profile
-
-**GET** `/users/profile`
-
-### Headers
-
-```
-Authorization: Bearer <token>
-```
-
-### Response
-
-```json
+⚠️ Important checks
+Each request should return 200 or 201
+No duplicate emails
+🚀 PHASE 3: Login Users (GET TOKENS)
+✅ Step 3.1: Login User 1
+Request:
+POST http://localhost:5000/api/auth/login
+Body:
 {
-  "_id": "user_id",
-  "name": "Amogh",
-  "email": "amogh@gmail.com"
+  "email": "user1@example.com",
+  "password": "123456"
 }
-```
+✅ Step 3.2: Copy token
+eyJhbGciOiJIUzI1NiIs...
 
----
+👉 Save:
 
-## ✏️ Update Profile
+User1_token = ...
+🔁 Repeat for:
+User 2
+User 3
+🚀 PHASE 4: Update Profiles (CRITICAL STEP)
+✅ Step 4.1: Create new request
+PUT http://localhost:5000/api/users/profile
+✅ Step 4.2: Add Header
 
-**PUT** `/users/profile`
+Go to Headers tab:
 
-### Headers
-
-```
-Authorization: Bearer <token>
-```
-
-### Request Body
-
-```json
+Authorization: Bearer <User1_token>
+✅ Step 4.3: Add Body
+👤 User 1
 {
-  "name": "Amogh Updated",
-  "email": "amoghnew@gmail.com",
-  "password": "newpassword123"
+  "bio": "Frontend dev",
+  "skills": ["React", "CSS"],
+  "learningGoals": ["Node.js", "MongoDB"],
+  "availability": "evening"
 }
-```
 
-### Response
+👉 Click Send
 
-```json
+🔁 Repeat for others
+👤 User 2
+
+(Header → User2 token)
+
 {
-  "_id": "user_id",
-  "name": "Amogh Updated",
-  "email": "amoghnew@gmail.com",
-  "token": "new_jwt_token"
+  "bio": "Backend dev",
+  "skills": ["Node.js", "MongoDB"],
+  "learningGoals": ["React", "JavaScript"],
+  "availability": "evening"
 }
-```
+👤 User 3
 
----
+(Header → User3 token)
 
-## 📄 Get All Users
+{
+  "bio": "Python dev",
+  "skills": ["Python"],
+  "learningGoals": ["Django"],
+  "availability": "morning"
+}
+🚀 PHASE 5: VERIFY DATA (DON’T SKIP)
+✅ Step 5.1: Request
+GET http://localhost:5000/api/users/me
+✅ Step 5.2: Add Header
+Authorization: Bearer <User1_token>
+✅ Step 5.3: Check response
 
-**GET** `/users`
+You MUST see:
 
-### Response
-
-```json
+{
+  "skills": ["React", "CSS"],
+  "learningGoals": ["Node.js", "MongoDB"],
+  "profileComplete": true
+}
+🔁 Repeat for all users
+🚀 PHASE 6: TEST MATCHING API
+✅ Step 6.1: New Request
+GET http://localhost:5000/api/matches
+✅ Step 6.2: Add Header
+Authorization: Bearer <User1_token>
+✅ Step 6.3: Click Send
+🔥 EXPECTED RESULT
+👤 For User 1:
 [
   {
-    "_id": "user1_id",
-    "name": "User One",
-    "email": "user1@gmail.com"
-  },
-  {
-    "_id": "user2_id",
-    "name": "User Two",
-    "email": "user2@gmail.com"
+    "user": {
+      "name": "User Two"
+    },
+    "youCanTeach": 1,
+    "theyCanTeach": 1,
+    "compatibilityPercent": 50-80
   }
 ]
-```
+❌ User 3 should NOT appear
+🔁 PHASE 7: TEST OTHER USERS
+✅ Step 7.1: Replace token with User 2
 
----
+Call /api/matches
 
-## 🔍 Get User By ID
+👉 Expect:
 
-**GET** `/users/:id`
+User 1 appears
+✅ Step 7.2: Replace with User 3
 
-### Example
+👉 Expect:
 
-```
-GET /users/64f1a2b3c4d5e6
-```
-
-### Response
-
-```json
-{
-  "_id": "user_id",
-  "name": "User Name",
-  "email": "user@gmail.com"
-}
+[]
 ```
 
 ---

@@ -19,40 +19,45 @@ export const getMyProfile = async (req, res) => {
 
 
 // PUT /api/users/profile
-export const updateProfile = async (req,res) => {
-  try{
-    const { bio , skills , learningGoals , availability } = req.body;
+export const updateProfile = async (req, res) => {
+  try {
+    const { bio, skills, learningGoals, availability } = req.body;
 
-    // Build update object with only provided fields
-    const updateFields = {};
-    if(bio !=  undefined) updateFields.bio = bio;
-    if(skills != undefined) updateFields.skills = skills;
-    if(learningGoals != undefined) updateFields.learningGoals = learningGoals;
-    if(availability != undefined) updateFields.availability = availability;
+    // 1. Get existing user
+    const user = await User.findById(req.user._id);
 
-    // Check if profile is complete
-    if(
-      updateFields.bio &&
-      updateFields.skills &&
-      updateFields.availability &&
-      updateFields.learningGoals
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 2. Update only provided fields
+    if (bio !== undefined) user.bio = bio;
+    if (skills !== undefined) user.skills = skills;
+    if (learningGoals !== undefined) user.learningGoals = learningGoals;
+    if (availability !== undefined) user.availability = availability;
+
+    // 3. Check if profile is complete (AFTER updating fields)
+    if (
+      user.bio &&
+      user.skills?.length > 0 &&
+      user.learningGoals?.length > 0 &&
+      user.availability
     ) {
-      updateFields.profileComplete = true;
+      user.profileComplete = true;
     }
-    const updatedUser = await User.findByIdAndUpdate(
-      req.user.id,
-      { $set: updateFields},
-      { returnDocument: 'after'}
-    ).select('-password');
-    if (!updatedUser){
-      return res.status(404).json({message: 'User not found'});
-    }
-    
+
+    // 4. Save updated user
+    await user.save();
+
+    // 5. Return updated user (without password)
+    const updatedUser = user.toObject();
+    delete updatedUser.password;
+
     res.status(200).json(updatedUser);
 
-  } catch(error){
-    res.status(500).json({message: 'Server error', error: error.message});
-  } 
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 };
 
 // GET /api/users

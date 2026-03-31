@@ -1,56 +1,77 @@
 import User from "../models/User.js";
 
-export const getRecommendedUsers = async (req, res) => {
+export const getMatches = async (req, res) => {
   try {
-    // Get logged user
-    const loggedUser = await User.findById(req.user._id).select("-password");
+    // 1. Get logged-in user
+    const currentUser = await User.findById(req.user._id);
 
-    if (!loggedUser) {
+    if (!currentUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Get other users
-    const users = await User.find({
+    // 2. Get other users with completed profiles
+    const allUsers = await User.find({
       _id: { $ne: req.user._id },
       profileComplete: true,
     }).select("-password");
 
-    // Prepare result array
-    const recommendedUsers = [];
+    // 3. Normalize current user data safely
+    const mySkills = (currentUser.skills || []).map(s => s.toLowerCase());
+    const myGoals = (currentUser.learningGoals || []).map(g => g.toLowerCase());
 
-    // 🔁 Loop through users
-    for (let i = 0; i < users.length; i++) {
-      const user = users[i];
+    // 4. Calculate scores
+    const scoredUsers = allUsers.map((otherUser) => {
 
-      // Count youCanTeach
-      const youCanTeach = (loggedUser.skills || []).filter((skill) =>
-        (user.learningGoals || []).includes(skill)
+      const theirSkills = (otherUser.skills || []).map(s => s.toLowerCase());
+      const theirGoals = (otherUser.learningGoals || []).map(g => g.toLowerCase());
+
+      // Matches
+      const youCanTeach = mySkills.filter(skill =>
+        theirGoals.includes(skill)
       ).length;
 
-      // Count theyCanTeach
-      const theyCanTeach = (user.skills || []).filter((skill) =>
-        (loggedUser.learningGoals || []).includes(skill)
+      const theyCanTeach = theirSkills.filter(skill =>
+        myGoals.includes(skill)
       ).length;
 
-      // Calculate score
-      const score = youCanTeach + theyCanTeach;
+      // Optional availability bonus
+      const availabilityBonus =
+        currentUser.availability && otherUser.availability &&
+        currentUser.availability === otherUser.availability
+          ? 1
+          : 0;
 
-      // Only include meaningful matches
-      if (score > 0) {
-        recommendedUsers.push({
-          user,
-          score,
-        });
-      }
-    }
+      // Score
+      const rawScore = youCanTeach + theyCanTeach + availabilityBonus;
 
-    // Sort by best match
-    recommendedUsers.sort((a, b) => b.score - a.score);
+      // Max possible score
+      const maxScore = mySkills.length + theirSkills.length + 1;
 
-    // Send response
-    res.status(200).json(recommendedUsers);
+      const compatibilityPercent =
+        maxScore > 0
+          ? Math.round((rawScore / maxScore) * 100)
+          : 0;
+
+      return {
+        user: otherUser,
+        youCanTeach,
+        theyCanTeach,
+        compatibilityPercent,
+      };
+    });
+
+    // 5. Filter + sort
+    const matches = scoredUsers
+      .filter(match => match.compatibilityPercent > 0)
+      .sort((a, b) => b.compatibilityPercent - a.compatibilityPercent);
+
+    // 6. Return result
+    res.status(200).json(matches);
 
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
   }
 };

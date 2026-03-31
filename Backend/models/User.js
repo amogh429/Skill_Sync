@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
         },
         availability:{
             type:String,
-            enum:["weekdays","weekends","both"],
+            enum:["morning","afternoon","evening"],
             default:"both",
         },
         profileComplete:{
