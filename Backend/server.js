@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes.js';
 import { protect } from './middleware/authMiddleware.js';
 import  userRoutes  from './routes/userRoutes.js';
 import matchRoutes from './routes/matchRoutes.js';
+import connectionRoutes from './routes/connectionRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/users',userRoutes);
 app.use('/api/matches',matchRoutes);
+app.use('/api/connections',connectionRoutes);
 
 app.get('/api/protected', protect , (req,res) => {
   res.json({message: `Hello ${req.user.name}, you are authorized`});
