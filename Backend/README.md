@@ -1,10 +1,10 @@
-# 🚀 SkillSync Backend API
+# 🧠 SkillSync Backend
 
 ## 📌 Overview
 
-SkillSync backend system is designed to connect users based on skills. It provides authentication, user profile management, and user discovery features.
+This is the backend for SkillSync, a platform that connects users based on their skills and learning goals.
 
-This API is built using Node.js, Express, and MongoDB with JWT-based authentication.
+It provides authentication, profile management, and matching functionality using a REST API.
 
 ---
 
@@ -14,49 +14,40 @@ This API is built using Node.js, Express, and MongoDB with JWT-based authenticat
 * Express.js
 * MongoDB
 * Mongoose
-* JWT (Authentication)
+* JWT Authentication
 
 ---
 
-## ✨ Features
+## 🚀 Features
 
-* 🔐 User Authentication (Register/Login)
-* 👤 Get User Profile
-* ✏️ Update User Profile
-* 📄 Get All Users
-* 🔍 Get User by ID
+* User Registration & Login
+* JWT-based Authentication
+* Profile Management
+* Skill-based Matching System
 
 ---
 
-## 📁 Project Structure
+## 📁 Folder Structure
 
 ```
-/backend
-  /controllers   → Business logic
-  /models        → Database schemas
-  /routes        → API routes
-  /middleware    → Auth middleware (JWT)
-  server.js      → Entry point
+/controllers   → Business logic
+/models        → Database schemas
+/routes        → API routes
+/middleware    → Authentication middleware
+server.js      → Entry point
 ```
 
 ---
 
 ## 🔧 Setup Instructions
 
-### 1. Clone the repository
-
-```
-git clone https://github.com/amogh429/Skill_Sync.git
-cd skillsync
-```
-
-### 2. Install dependencies
+### 1. Install dependencies
 
 ```
 npm install
 ```
 
-### 3. Create a .env file
+### 2. Create `.env` file
 
 ```
 PORT=5000
@@ -64,7 +55,7 @@ MONGO_URI=mongodb://amoghallrounder_db_user:test123@ac-lqifi2a-shard-00-00.4k7tv
 JWT_SECRET=your_secret_key
 ```
 
-### 4. Run the server
+### 3. Run server
 
 ```
 npm run dev
@@ -72,108 +63,19 @@ npm run dev
 
 ---
 
+## 📄 Documentation
+
+* API Reference → `api.md`
+* Testing Guide → `testing.md`
+
+---
+
 ## 🔐 Authentication
 
-This API uses JWT (JSON Web Token).
-
-### Add this header to protected routes:
-
-```
-Authorization: Bearer <your_token>
-```
-
----
-
-## 📡 API Endpoints
-
-### 📝 Register User
-
-```
-POST /api/auth/register
-```
-
-### 🔑 Login User
-
-```
-POST /api/auth/login
-```
-
----
-
-### 👤 Get My Profile
-
-```
-GET /api/users/profile
-```
-
-🔒 Protected
-
----
-
-### ✏️ Update Profile
-
-```
-PUT /api/users/profile
-```
-
-🔒 Protected
-
----
-
-### 📄 Get All Users
-
-```
-GET /api/users
-```
-
----
-
-### 🔍 Get User By ID
-
-```
-GET /api/users/:id
-```
-### Match Users
-
-```
-GET /api/matches
-```
-
----
-
-## 🧪 Testing
-
-You can test all endpoints using Postman.
-
-Steps:
-
-1. Login/Register to get token
-2. Copy token
-3. Add to headers:
-4. Match your skills with other usrs
+Protected routes require JWT token:
 
 ```
 Authorization: Bearer <token>
 ```
-
----
-
-## 🚧 Future Improvements
-
-* 💬 Messaging system
-* ⭐ Skill endorsements
-* 🔎 Advanced search & filters
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome. For major changes, please open an issue first.
-
----
-
-## 📜 License
-
-This project is open-source and available under the MIT License.
 
 ---
