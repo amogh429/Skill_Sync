@@ -133,6 +133,11 @@ GET /api/users
 ```
 GET /api/users/:id
 ```
+### Match Users
+
+```
+GET /api/matches
+```
 
 ---
 
@@ -145,6 +150,7 @@ Steps:
 1. Login/Register to get token
 2. Copy token
 3. Add to headers:
+4. Match your skills with other usrs
 
 ```
 Authorization: Bearer <token>
