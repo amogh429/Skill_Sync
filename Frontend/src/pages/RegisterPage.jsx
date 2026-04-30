@@ -1,114 +1,150 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { InputField } from "../components/ui/InputField";
-import { ButtonOutline } from "../components/ui/button";
-
-import api from "../api/axios"; // your axios instance
+import { useNavigate,Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import  axios_api  from "../api/axios";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  CardDescription
+} from "@/components/ui/card";
 
-export default function RegisterPage() {
-  const navigate = useNavigate();
-  const { login } = useAuth();
 
-  // ✅ Form state
+// import React from 'react'
+
+
+
+const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  name: "",
+  email: "",
+  password: "",
+});
 
-  // ✅ UI state
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+const [loading, setLoading] = useState(false);
 
-  // 🔄 Handle input changes
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+const [error, setError] = useState(null);
 
-  // 🚀 Handle submit
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // ❗ prevents page reload
+const navigate = useNavigate();
 
-    setLoading(true);
-    setError(null);
+// ✅ Auth context
+const { login } = useAuth();
 
-    try {
-      const res = await api.post("/api/auth/register", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      });
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-      // ✅ Extract data
-      const { user, token } = res.data;
+  setFormData((prev) => ({
+    ...prev, // keep existing fields
+    [name]: value, // update only the changed field
+  }));
+};
 
-      // ✅ Save to context + localStorage
-      login(user, token);
+const handleSubmit = async (e) => {
+  e.preventDefault(); // 1️⃣ stop page refresh
 
-      // ✅ Redirect to setup page
-      navigate("/setup");
-    } catch (err) {
-      // ❌ Handle error
-      setError(
-        err.response?.data?.message || "Something went wrong"
-      );
-    } finally {
-      setLoading(false); // 🔥 always runs
-    }
-  };
+  // console.log(formData);
+
+  setLoading(true); // 2️⃣ start loading
+  setError(null); // clear previous errors
+
+  try {
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // 3️⃣ API call
+    const response = await axios_api.post("/api/auth/register", formData);
+
+    // 4️⃣ destructure response
+    const { user, token } = response.data;
+
+    // 5️⃣ save auth state
+    login(user, token);
+
+    // 6️⃣ redirect
+    navigate("/setup");
+  } catch (err) {
+    // ❌ handle error
+    setError(err.response?.data?.message || "Something went wrong");
+  } finally {
+    // 🔁 always stop loading
+    setLoading(false);
+  }
+};
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md p-6 space-y-4 border rounded-lg shadow"
-      >
-        <h2 className="text-2xl font-bold text-center">
-          Register
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Create your account</CardTitle>
+          <CardDescription>Find your perfect study partner.</CardDescription>
+        </CardHeader>
 
-        {/* ❌ Error Message */}
-        {error && (
-          <p className="text-red-500 text-sm text-center">
-            {error}
-          </p>
-        )}
+        {/* Content */}
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-4">
+              {/* Name */}
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium">Name</label>
+                <Input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter your name"
+                  disabled={loading}
+                />
+              </div>
 
-        {/* Name */}
-        <InputField
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-        />
+              {/* Email */}
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium">Email</label>
+                <Input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Enter your email"
+                  disabled={loading}
+                />
+              </div>
 
-        {/* Email */}
-        <InputField
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-        />
+              {/* Password */}
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium">Password</label>
+                <Input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  disabled={loading}
+                />
+              </div>
 
-        {/* Password */}
-        <InputField
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-        />
+              {/* Error Message */}
+              {error && <p className="text-sm text-red-500">{error}</p>}
 
-        {/* Submit */}
-        <ButtonOutline type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
-        </ButtonOutline>
-      </form>
+              {/* Submit Button */}
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Creating account..." : "Register"}
+              </Button>
+
+              {/* Login Redirect */}
+              <p className="text-sm text-center text-gray-600">
+                Already have an account?{" "}
+                <Link to="/login" className="text-blue-600 hover:underline">
+                  Login
+                </Link>
+              </p>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
-}
+};
+
+export default RegisterPage;

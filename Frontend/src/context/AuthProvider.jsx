@@ -9,7 +9,13 @@ export const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
+    if (!storedUser || storedUser === "undefined") return null;
+
+  try {
+    return JSON.parse(storedUser);
+  } catch {
+    return null;
+  }
   });
 
   const [token, setToken] = useState(() => {
@@ -20,8 +26,13 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     setToken(token);
 
+    if(user) {
     localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("token", token);
+    }
+
+    if(token) {
+         localStorage.setItem("token", token);
+    }
   };
 
   const logout = () => {
