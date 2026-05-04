@@ -56,11 +56,7 @@ const handleSubmit = async (e) => {
     // 3️⃣ API call
     const response = await axios_api.post("/api/auth/register", formData);
 
-    // 4️⃣ destructure response
-    const { user, token } = response.data;
-
-    // 5️⃣ save auth state
-    login(user, token);
+    login(response.data);
 
     // 6️⃣ redirect
     navigate("/setup");

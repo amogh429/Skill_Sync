@@ -1,58 +1,37 @@
-import {  useState } from "react";
-import { useNavigate } from "react-router-dom";
+// AuthProvider.jsx
+import React, { useState } from "react";
 import { AuthContext } from "./authContext";
 
-
-
 export const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
-
   const [user, setUser] = useState(() => {
+  try {
     const storedUser = localStorage.getItem("user");
+
     if (!storedUser || storedUser === "undefined") return null;
 
-  try {
     return JSON.parse(storedUser);
-  } catch {
+  } catch (error) {
+    console.error("Invalid user in localStorage:", error);
     return null;
   }
-  });
+});
 
-  const [token, setToken] = useState(() => {
-    return localStorage.getItem("token") || null;
-  });
 
-  const login = (userData, token) => {
-    setUser(userData);
-    setToken(token);
-
-    if(user) {
-    localStorage.setItem("user", JSON.stringify(userData));
-    }
-
-    if(token) {
-         localStorage.setItem("token", token);
-    }
+  // ✅ Login → store user + token
+  const login = (data) => {
+    setUser(data);
+    localStorage.setItem("user", JSON.stringify(data));
   };
 
+  // ✅ Logout → clear everything
   const logout = () => {
     setUser(null);
-    setToken(null);
-
     localStorage.removeItem("user");
-    localStorage.removeItem("token");
-
-    navigate("/login");
   };
 
-  const isAuthenticated = !!token;
-
   return (
-    <AuthContext.Provider
-      value={{ user, token, login, logout, isAuthenticated }}
-    >
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
