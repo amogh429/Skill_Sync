@@ -12,6 +12,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
+    
     <Routes>
       {/* 🌐 Public Routes */}
       <Route path="/login" element={<LoginPage />} />
@@ -54,6 +55,7 @@ function App() {
         }
       />
     </Routes>
+    
   );
 }
 
