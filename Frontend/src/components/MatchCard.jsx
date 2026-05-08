@@ -54,7 +54,7 @@ const MatchCard = ({
   return (
     <Card
       className="cursor-pointer hover:shadow-md transition"
-      onClick={() => onViewProfile(user._id)}
+      onClick={() => onViewProfile(match.user._id)}
     >
       <CardContent className="p-4 space-y-4">
 

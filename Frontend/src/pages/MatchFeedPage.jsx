@@ -9,7 +9,7 @@ const MatchFeedPage = () => {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true); // starts true
   const [error, setError] = useState(null);
-  const [connectionStatus, setConnectionStatus] = useState(null);
+  const [connectionStatus, setConnectionStatus] = useState({});
 
   // 🔹 Hooks
   const navigate = useNavigate();
@@ -172,6 +172,7 @@ const handleConnect = async (userId) => {
       {!loading && !error && matches.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {matches.map((match) => (
+            // console.log('item:'item);
             <MatchCard
               key={match.user._id}
               match={match}
