@@ -19,15 +19,17 @@ export const AuthProvider = ({ children }) => {
 
   // ✅ Login → store user + token
   const login = (data) => {
-    setUser(data);
-    localStorage.setItem("user", JSON.stringify(data));
-  };
+  setUser(data);
+  localStorage.setItem("user", JSON.stringify(data)); // ← this line must exist
+};
 
   // ✅ Logout → clear everything
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-  };
+  setUser(null);
+
+  localStorage.removeItem("user");
+  localStorage.removeItem("token");
+};
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>

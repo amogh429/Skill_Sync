@@ -108,32 +108,54 @@ const ProfileSetupPage = () => {
     }
 
     try {
-      console.log("USER:", user);
-      console.log("TOKEN:", user?.token);
-      const res = await fetch("http://localhost:5000/api/users/profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${user?.token}`, // ✅ FIXED
-        },
-        body: JSON.stringify(formData),
-      });
+  setLoading(true);
+  setError(null);
 
-      const data = await res.json();
+  console.log("USER:", user);
+  console.log("TOKEN:", user?.token);
 
-      if (!res.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
+  if (!user?.token) {
+    throw new Error("User token not found. Please login again.");
+  }
 
-      login(data); // update context
-      navigate("/matches");
-
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+  const res = await fetch(
+    "http://localhost:5000/api/users/profile",
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify(formData),
     }
-  };
+  );
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(
+      data?.message || "Failed to update profile"
+    );
+  }
+
+  // Preserve token while updating user data
+  login({
+    ...data,
+    token: user.token,
+  });
+  console.log(data);
+
+  navigate("/matches");
+} catch (err) {
+  console.error(err);
+
+  setError(
+    err.message || "Something went wrong"
+  );
+} finally {
+  setLoading(false);
+}
+  }
 
   // ================= UI =================
   return (

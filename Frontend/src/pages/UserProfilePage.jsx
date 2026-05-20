@@ -87,7 +87,7 @@ useEffect(() => {
   
 const handleConnect = async () => {
   try {
-  const res = await fetch(`http://localhost:5000/api/connections/request/${id}`,{
+  const res = await fetch(`http://localhost:5000/api/connections/${id}`,{
       method: 'POST',
       headers:{
         'Content-Type': 'application/json',

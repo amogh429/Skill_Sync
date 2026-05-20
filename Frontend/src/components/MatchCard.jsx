@@ -20,12 +20,12 @@ const MatchCard = ({
   };
 
   // 🔘 Connect button logic
-  const renderConnectButton = (e) => {
-    e?.stopPropagation(); // 🚫 prevent card click
+  const renderConnectButton = () => {
+     // 🚫 prevent card click
 
     if (status === "pending") {
       return (
-        <Button disabled variant="secondary">
+        <Button disabled variant="secondary" onClick={(e) => e.stopPropagation()}>
           Request Sent
         </Button>
       );
@@ -33,7 +33,7 @@ const MatchCard = ({
 
     if (status === "connected") {
       return (
-        <span className="text-sm font-medium text-green-600">
+        <span className="text-sm font-medium text-green-600" onClick={(e) => e.stopPropagation()}>
           Connected
         </span>
       );
@@ -43,7 +43,7 @@ const MatchCard = ({
       <Button
         onClick={(e) => {
           e.stopPropagation();
-          onConnect(match.user._id);
+          onConnect(user._id);
         }}
       >
         Connect
@@ -54,7 +54,7 @@ const MatchCard = ({
   return (
     <Card
       className="cursor-pointer hover:shadow-md transition"
-      onClick={() => onViewProfile(match.user._id)}
+      onClick={() => onViewProfile(user._id)}
     >
       <CardContent className="p-4 space-y-4">
 
