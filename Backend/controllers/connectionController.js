@@ -148,7 +148,6 @@ export const getConnections = async (req, res) => {
         { sender: userId },
         { receiver: userId }
       ],
-      status: "accepted"
     })
     .populate("sender", "-password")
     .populate("receiver", "-password");

@@ -1,5 +1,5 @@
 import User from '../models/User.js';      //your MongoDb schema
-import bcrypt from 'bcrypt';               // hashes passwords + compares them securely
+import bcrypt from 'bcryptjs';               // hashes passwords + compares them securely
 import jwt from 'jsonwebtoken';             //creates JET token
 import { validationResult } from 'express-validator';      //checks request validation
 
@@ -47,7 +47,8 @@ export const registerUser = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.log(error);
+    res.status(500).json({message:error.message });
   }
 };
 
