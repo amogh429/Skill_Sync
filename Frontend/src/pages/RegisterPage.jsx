@@ -2,15 +2,6 @@ import { useState } from "react";
 import { useNavigate,Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import  axios_api  from "../api/axios";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-  CardDescription
-} from "@/components/ui/card";
 
 
 // import React from 'react'
@@ -70,75 +61,152 @@ const handleSubmit = async (e) => {
 };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Create your account</CardTitle>
-          <CardDescription>Find your perfect study partner.</CardDescription>
-        </CardHeader>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-indigo-50 p-4">
+      <div className="w-full max-w-md">
 
-        {/* Content */}
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-4">
-              {/* Name */}
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium">Name</label>
-                <Input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Enter your name"
-                  disabled={loading}
-                />
-              </div>
+        {/* Logo */}
+        <div className="flex justify-center items-center gap-3 mb-6">
+          <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-xl">S</span>
+          </div>
 
-              {/* Email */}
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium">Email</label>
-                <Input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Enter your email"
-                  disabled={loading}
-                />
-              </div>
+          <h1 className="text-3xl font-bold tracking-tight leading-none text-slate-800">
+            Skill<span className="text-indigo-600">Sync</span>
+          </h1>
+        </div>
 
-              {/* Password */}
-              <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium">Password</label>
-                <Input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Enter your password"
-                  disabled={loading}
-                />
-              </div>
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
 
-              {/* Error Message */}
-              {error && <p className="text-sm text-red-500">{error}</p>}
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-slate-900">
+              Create your account
+            </h1>
+            <p className="text-slate-500 text-sm mt-1">
+              Find your perfect study partner
+            </p>
+          </div>
 
-              {/* Submit Button */}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Creating account..." : "Register"}
-              </Button>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-              {/* Login Redirect */}
-              <p className="text-sm text-center text-gray-600">
-                Already have an account?{" "}
-                <Link to="/login" className="text-blue-600 hover:underline">
-                  Login
-                </Link>
-              </p>
+            {/* Name */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-slate-700">
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Your full name"
+                disabled={loading}
+                required
+                className="w-full h-11 px-4 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              />
             </div>
+
+            {/* Email */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-slate-700">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                disabled={loading}
+                required
+                className="w-full h-11 px-4 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+            </div>
+
+            {/* Password */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-slate-700">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="At least 6 characters"
+                disabled={loading}
+                required
+                className="w-full h-11 px-4 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+            </div>
+
+            {/* Error message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-lg">
+                {error}
+              </div>
+            )}
+
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-11 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg
+                    className="animate-spin h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8z"
+                    />
+                  </svg>
+                  Creating account...
+                </span>
+              ) : (
+                "Create Account"
+              )}
+            </button>
+
           </form>
-        </CardContent>
-      </Card>
+
+          {/* Divider */}
+          <div className="border-t border-slate-100 my-6" />
+
+          {/* Bottom link */}
+          <p className="text-center text-sm text-slate-500">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-indigo-600 font-medium hover:text-indigo-700 hover:underline transition-colors"
+            >
+              Login
+            </Link>
+          </p>
+
+        </div>
+
+        {/* Footer text */}
+        <p className="text-center text-xs text-slate-400 mt-6">
+          SkillSync — Find your perfect study partner
+        </p>
+
+      </div>
     </div>
   );
 };

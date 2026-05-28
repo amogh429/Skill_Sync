@@ -4,19 +4,6 @@ import { useAuth } from '@/context/useAuth';
 // import axios_api from '@/api/axios';
 
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-// import { Textarea } from "@/components/ui/textarea";
-// import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-
-
 
 const LoginPage = () => {
 
@@ -73,92 +60,127 @@ const LoginPage = () => {
     }
   }
   return (
-  <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-
-    <Card className="w-full max-w-md">
-
-      <CardHeader>
-        <CardTitle>
-          Welcome back
-        </CardTitle>
-
-        <CardDescription>
-          Login to find your study matches
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent>
-
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-        >
-
-          {/* Email */}
-          <div className="flex flex-col gap-1.5">
-            <label>Email</label>
-
-            <Input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              required
-            />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-indigo-50 p-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="flex justify-center items-center gap-3 mb-6">
+          <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-xl">S</span>
           </div>
 
-          {/* Password */}
-          <div className="flex flex-col gap-1.5">
-            <label>Password</label>
+          <h1 className="text-3xl font-bold tracking-tight leading-none text-slate-800">
+            Skill<span className="text-indigo-600">Sync</span>
+          </h1>
+        </div>
 
-            <Input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-
-          {/* Error */}
-          {error && (
-            <p className="text-red-500 text-sm">
-              {error}
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-slate-900">Welcome back</h1>
+            <p className="text-slate-500 text-sm mt-1">
+              Login to find your study matches
             </p>
-          )}
+          </div>
 
-          {/* Submit */}
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full"
-          >
-            {loading
-              ? "Logging in..."
-              : "Login"}
-          </Button>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {/* Email */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-slate-700">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                disabled={loading}
+                required
+                className="w-full h-11 px-4 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+            </div>
 
-          {/* Bottom Link */}
-          <p className="text-center text-sm text-gray-500">
-            Don't have an account?{" "}
+             {/* Password */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-slate-700">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                disabled={loading}
+                required
+                className="w-full h-11 px-4 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+            </div>
 
-            <Link
-              to="/register"
-              className="text-blue-600 hover:underline"
+            {/* Error message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-lg">
+                {error}
+              </div>
+            )}
+
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-11 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed mt-1"
             >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg
+                    className="animate-spin h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8z"
+                    />
+                  </svg>
+                  Logging in...
+                </span>
+              ) : (
+                "Login"
+              )}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="border-t border-slate-100 my-6" />
+
+          {/* Bottom link */}
+          <p className="text-center text-sm text-slate-500">
+            Don't have an account?{" "}
+             <Link
+              to="/register"
+              className="text-indigo-600 font-medium hover:text-indigo-700 hover:underline transition-colors"
+              >
               Sign up
             </Link>
           </p>
-
-        </form>
-
-      </CardContent>
-
-    </Card>
-
-  </div>
+        </div>
+        {/* Footer text */}
+        <p className="text-center text-xs text-slate-400 mt-6">
+          SkillSync — Find your perfect study partner
+        </p>
+      </div>
+    </div>
 );
 }
 
