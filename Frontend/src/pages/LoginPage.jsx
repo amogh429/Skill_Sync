@@ -5,6 +5,7 @@ import { useAuth } from '@/context/useAuth';
 
 
 
+
 const LoginPage = () => {
 
   const [formData,setFormData] = useState({
@@ -46,7 +47,11 @@ const LoginPage = () => {
       })
 
       const data = await res.json();
+
+
+
       console.log("Login response:", data);
+
       if(!res.ok){
         throw new Error(data.message || "Something went wrong");
       }
@@ -60,7 +65,7 @@ const LoginPage = () => {
     }
   }
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-indigo-50 p-4">
+     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-indigo-50 p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center items-center gap-3 mb-6">
@@ -82,8 +87,7 @@ const LoginPage = () => {
               Login to find your study matches
             </p>
           </div>
-
-          {/* Form */}
+           {/* Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* Email */}
             <div className="flex flex-col gap-1.5">
@@ -167,14 +171,14 @@ const LoginPage = () => {
           {/* Bottom link */}
           <p className="text-center text-sm text-slate-500">
             Don't have an account?{" "}
-             <Link
+            <Link
               to="/register"
               className="text-indigo-600 font-medium hover:text-indigo-700 hover:underline transition-colors"
               >
               Sign up
             </Link>
           </p>
-        </div>
+          </div>
         {/* Footer text */}
         <p className="text-center text-xs text-slate-400 mt-6">
           SkillSync — Find your perfect study partner
@@ -184,4 +188,6 @@ const LoginPage = () => {
 );
 }
 
-export default LoginPage
+
+export default LoginPage;
+
