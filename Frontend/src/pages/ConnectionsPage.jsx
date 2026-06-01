@@ -1,4 +1,4 @@
-import { useState, useEffect,useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useAuth } from "../context/useAuth";
@@ -15,27 +15,24 @@ const ConnectionsPage = () => {
   const token = user?.token;
 
   // ─── Fetch Data ───────────────────────────────────────────
-  
 
   const fetchConnections = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.get("/api/connections",{
+      const res = await axios.get("/api/connections", {
         headers: {
           Authorization: `Bearer ${token}`,
-        }
+        },
       });
       const data = res.data;
 
       // Split into accepted and pending
-      const accepted = data.connections.filter(
-        (c) => c.status === "accepted"
-      );
+      const accepted = data.connections.filter((c) => c.status === "accepted");
       const pending = data.connections.filter(
         (c) =>
           c.status === "pending" &&
-          c.receiver._id.toString() === user?._id?.toString()
+          c.receiver._id.toString() === user?._id?.toString(),
       );
 
       setConnections(accepted);
@@ -45,16 +42,16 @@ const ConnectionsPage = () => {
     } finally {
       setLoading(false);
     }
-  },[user?._id,token]);
+  }, [user?._id, token]);
   useEffect(() => {
-  const loadConnections = async () => {
-    if (!user?._id) return;
+    const loadConnections = async () => {
+      if (!user?._id) return;
 
-    await fetchConnections();
-  };
+      await fetchConnections();
+    };
 
-  loadConnections();
-}, [fetchConnections, user?._id]);
+    loadConnections();
+  }, [fetchConnections, user?._id]);
 
   // ─── Get the other user from a connection ─────────────────
   const getOtherUser = (connection) => {
@@ -68,32 +65,28 @@ const ConnectionsPage = () => {
   const handleAccept = async (connectionId) => {
     try {
       const res = await fetch(
-      `http://localhost:5000/api/connections/${connectionId}/accept`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
+        `http://localhost:5000/api/connections/${connectionId}/accept`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
         },
-      }
-    );
-
-    const data = await res.json();
-
-     if (!res.ok) {
-      throw new Error(
-        data.message || "Failed to accept request"
       );
-    }
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to accept request");
+      }
 
       // Find the accepted connection
       const acceptedConnection = pendingRequests.find(
-        (c) => c._id === connectionId
+        (c) => c._id === connectionId,
       );
 
       // Move from pending to accepted
-      setPendingRequests((prev) =>
-        prev.filter((c) => c._id !== connectionId)
-      );
+      setPendingRequests((prev) => prev.filter((c) => c._id !== connectionId));
       setConnections((prev) => [
         ...prev,
         { ...acceptedConnection, status: "accepted" },
@@ -107,9 +100,7 @@ const ConnectionsPage = () => {
   const handleReject = async (connectionId) => {
     try {
       await axios.put(`/api/connections/${connectionId}/reject`);
-      setPendingRequests((prev) =>
-        prev.filter((c) => c._id !== connectionId)
-      );
+      setPendingRequests((prev) => prev.filter((c) => c._id !== connectionId));
     } catch (err) {
       setError(err.response?.data?.message || "Failed to reject request");
     }
@@ -155,12 +146,9 @@ const ConnectionsPage = () => {
     <>
       <Navbar />
       <div className="max-w-4xl mx-auto p-6">
-
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">
-            My Connections
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">My Connections</h1>
           <p className="text-gray-500 mt-1">
             {connections.length} study{" "}
             {connections.length === 1 ? "partner" : "partners"}
@@ -222,9 +210,7 @@ const ConnectionsPage = () => {
           {/* Empty state */}
           {connections.length === 0 ? (
             <div className="text-center py-16 border rounded-xl bg-white">
-              <p className="text-gray-500 text-lg">
-                No connections yet
-              </p>
+              <p className="text-gray-500 text-lg">No connections yet</p>
               <p className="text-gray-400 text-sm mt-1">
                 Go find your perfect study partner
               </p>
@@ -286,7 +272,7 @@ const ConnectionsPage = () => {
                           year: "numeric",
                           month: "long",
                           day: "numeric",
-                        }
+                        },
                       )}
                     </p>
 

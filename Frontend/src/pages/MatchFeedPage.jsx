@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import axios from "../api/axios";
 import MatchCard from "@/components/MatchCard";
-import Navbar from "@/components/shared/Navbar";
+import Navbar from "@/components/Shared/Navbar";
 
 const MatchFeedPage = () => {
   const [matches, setMatches] = useState([]);
@@ -142,7 +142,7 @@ const MatchFeedPage = () => {
     <>
       <Navbar />
       <div className="min-h-screen bg-slate-50">
-        <div className="max-w-5xl mx-auto px-6 py-10">
+        <div className="max-w-5xl mx-auto px-6 pt-10 pb-10 py-10">
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-slate-900">Your Matches</h1>
