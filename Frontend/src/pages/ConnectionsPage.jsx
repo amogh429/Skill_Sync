@@ -145,152 +145,213 @@ const ConnectionsPage = () => {
   return (
     <>
       <Navbar />
-      <div className="max-w-4xl mx-auto p-6">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">My Connections</h1>
-          <p className="text-gray-500 mt-1">
-            {connections.length} study{" "}
-            {connections.length === 1 ? "partner" : "partners"}
-          </p>
-        </div>
-
-        {/* Pending Requests Section */}
-        {pendingRequests.length > 0 && (
+      <div className="min-h-screen bg-slate-50">
+        <div className="max-w-5xl mx-auto px-6 py-10">
+          {/* Page Header */}
           <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">
-              Pending Requests ({pendingRequests.length})
-            </h2>
-            <div className="flex flex-col gap-4">
-              {pendingRequests.map((request) => {
-                const sender = request.sender;
-                return (
-                  <div
-                    key={request._id}
-                    className="border rounded-xl p-4 flex items-center justify-between bg-white"
-                  >
-                    {/* Sender info */}
-                    <div>
-                      <p className="font-semibold text-gray-900">
-                        {sender.name}
-                      </p>
-                      <p className="text-sm text-gray-500 line-clamp-1">
-                        {sender.bio || "No bio yet"}
-                      </p>
-                    </div>
-
-                    {/* Action buttons */}
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleAccept(request._id)}
-                        className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors"
-                      >
-                        Accept
-                      </button>
-                      <button
-                        onClick={() => handleReject(request._id)}
-                        className="px-4 py-2 bg-red-100 text-red-600 text-sm rounded-lg hover:bg-red-200 transition-colors"
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            <h1 className="text-3xl font-bold text-slate-900">
+              My Connections
+            </h1>
+            <p className="text-slate-500 mt-2">
+              <span className="font-semibold text-indigo-600">
+                {connections.length}
+              </span>{" "}
+              study {connections.length === 1 ? "partner" : "partners"}
+            </p>
           </div>
-        )}
 
-        {/* Accepted Connections Section */}
-        <div>
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            Study Partners
-          </h2>
+          {/* ── Pending Requests Section ──────────────────── */}
+          {pendingRequests.length > 0 && (
+            <div className="mb-8">
+              {/* Section header */}
+              <div className="flex items-center gap-2 mb-4">
+                <h2 className="text-lg font-semibold text-slate-800">
+                  Pending Requests
+                </h2>
+                <span className="px-2.5 py-0.5 bg-amber-100 text-amber-700 text-xs font-semibold rounded-full">
+                  {pendingRequests.length}
+                </span>
+              </div>
 
-          {/* Empty state */}
-          {connections.length === 0 ? (
-            <div className="text-center py-16 border rounded-xl bg-white">
-              <p className="text-gray-500 text-lg">No connections yet</p>
-              <p className="text-gray-400 text-sm mt-1">
-                Go find your perfect study partner
-              </p>
-              <button
-                onClick={() => navigate("/matches")}
-                className="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                Find Matches
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {connections.map((connection) => {
-                const otherUser = getOtherUser(connection);
-                return (
-                  <div
-                    key={connection._id}
-                    onClick={() => handleViewProfile(otherUser._id)}
-                    className="border rounded-xl p-5 bg-white hover:shadow-md transition-shadow cursor-pointer"
-                  >
-                    {/* User info */}
-                    <div className="mb-3">
-                      <h3 className="font-semibold text-gray-900 text-lg">
-                        {otherUser.name}
-                      </h3>
-                      <p className="text-sm text-gray-500 line-clamp-2 mt-1">
-                        {otherUser.bio || "No bio yet"}
-                      </p>
-                    </div>
+              <div className="flex flex-col gap-3">
+                {pendingRequests.map((request) => {
+                  const sender = request.sender;
+                  return (
+                    <div
+                      key={request._id}
+                      className="bg-amber-50 border border-amber-100 rounded-2xl p-5 flex items-center justify-between gap-4"
+                    >
+                      {/* Sender info */}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-slate-900">
+                          {sender.name}
+                        </p>
+                        <p className="text-sm text-slate-500 line-clamp-1 mt-0.5">
+                          {sender.bio || "No bio yet"}
+                        </p>
+                        {/* Sender skills preview */}
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {sender.skills?.slice(0, 3).map((skill) => (
+                            <span
+                              key={skill}
+                              className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-xs font-medium rounded-full border border-indigo-100"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
 
-                    {/* Skills */}
-                    <div className="mb-3">
-                      <p className="text-xs font-medium text-gray-400 uppercase mb-1">
-                        Knows
-                      </p>
-                      <div className="flex flex-wrap gap-1">
-                        {otherUser.skills?.slice(0, 3).map((skill) => (
-                          <span
-                            key={skill}
-                            className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                        {otherUser.skills?.length > 3 && (
-                          <span className="px-2 py-0.5 bg-gray-100 text-gray-500 text-xs rounded-full">
-                            +{otherUser.skills.length - 3} more
-                          </span>
-                        )}
+                      {/* Action buttons */}
+                      <div className="flex gap-2 flex-shrink-0">
+                        <button
+                          onClick={() => handleAccept(request._id)}
+                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-xl transition-colors shadow-sm"
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() => handleReject(request._id)}
+                          className="px-4 py-2 bg-white hover:bg-red-50 text-red-500 hover:text-red-600 text-sm font-medium rounded-xl border border-red-200 transition-colors"
+                        >
+                          Reject
+                        </button>
                       </div>
                     </div>
-
-                    {/* Connected since */}
-                    <p className="text-xs text-gray-400 mt-3">
-                      Connected since{" "}
-                      {new Date(connection.createdAt).toLocaleDateString(
-                        "en-IN",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        },
-                      )}
-                    </p>
-
-                    {/* View profile button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleViewProfile(otherUser._id);
-                      }}
-                      className="mt-3 w-full py-2 border border-indigo-600 text-indigo-600 text-sm rounded-lg hover:bg-indigo-50 transition-colors"
-                    >
-                      View Profile
-                    </button>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           )}
+
+          {/* ── Study Partners Section ────────────────────── */}
+          <div>
+            {/* Section header */}
+            <div className="flex items-center gap-2 mb-4">
+              <h2 className="text-lg font-semibold text-slate-800">
+                Study Partners
+              </h2>
+              {connections.length > 0 && (
+                <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                  {connections.length}
+                </span>
+              )}
+            </div>
+
+            {/* Empty state */}
+            {connections.length === 0 && (
+              <div className="text-center py-20 bg-white rounded-2xl border border-slate-200">
+                <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <span className="text-3xl">🤝</span>
+                </div>
+                <p className="text-slate-700 font-semibold text-lg">
+                  No connections yet
+                </p>
+                <p className="text-slate-400 text-sm mt-1">
+                  Go find your perfect study partner
+                </p>
+                <button
+                  onClick={() => navigate("/matches")}
+                  className="mt-6 px-6 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
+                >
+                  Find Matches
+                </button>
+              </div>
+            )}
+
+            {/* Connections grid */}
+            {connections.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {connections.map((connection) => {
+                  const otherUser = getOtherUser(connection);
+                  return (
+                    <div
+                      key={connection._id}
+                      onClick={() => handleViewProfile(otherUser._id)}
+                      className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden"
+                    >
+                      {/* Card header */}
+                      <div className="p-5 pb-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-slate-900 text-lg leading-tight">
+                              {otherUser.name}
+                            </h3>
+                            <p className="text-sm text-slate-500 line-clamp-2 mt-1 leading-relaxed">
+                              {otherUser.bio || "No bio yet"}
+                            </p>
+                          </div>
+                          {/* Connected badge */}
+                          <span className="flex-shrink-0 px-2.5 py-1 bg-emerald-50 text-emerald-600 text-xs font-medium rounded-full border border-emerald-100">
+                            ✓ Connected
+                          </span>
+                        </div>
+
+                        {/* Availability */}
+                        <span className="inline-block mt-3 px-2.5 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">
+                          📅 {otherUser.availability}
+                        </span>
+                      </div>
+
+                      {/* Divider */}
+                      <div className="border-t border-slate-100 mx-5" />
+
+                      {/* Skills */}
+                      <div className="p-5 pt-4 space-y-3">
+                        <div>
+                          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">
+                            Knows
+                          </p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {otherUser.skills?.slice(0, 3).map((skill) => (
+                              <span
+                                key={skill}
+                                className="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-medium rounded-full border border-indigo-100"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                            {otherUser.skills?.length > 3 && (
+                              <span className="px-2.5 py-1 bg-slate-100 text-slate-500 text-xs rounded-full">
+                                +{otherUser.skills.length - 3} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card footer */}
+                      <div className="px-5 pb-5 pt-0">
+                        {/* Connected since */}
+                        <p className="text-xs text-slate-400 mb-3">
+                          Connected since{" "}
+                          {new Date(connection.createdAt).toLocaleDateString(
+                            "en-IN",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            },
+                          )}
+                        </p>
+
+                        {/* View profile button */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewProfile(otherUser._id);
+                          }}
+                          className="w-full py-2.5 text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl border border-indigo-100 transition-colors"
+                        >
+                          View Profile
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
