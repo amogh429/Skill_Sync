@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useAuth } from "../context/useAuth";
-import Navbar from "../components/shared/Navbar";
+import Navbar from "../components/Shared/Navbar";
 
 const ConnectionsPage = () => {
   const [connections, setConnections] = useState([]);
