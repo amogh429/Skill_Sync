@@ -14,7 +14,7 @@ connectDB();
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:5173", "skill-sync-nine-iota.vercel.app"],
+    origin: ["http://localhost:5173", "https://skill-sync-nine-iota.vercel.app/"],
     credentials: true,
   }),
 );
