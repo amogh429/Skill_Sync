@@ -65,7 +65,7 @@ const ConnectionsPage = () => {
   const handleAccept = async (connectionId) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/connections/${connectionId}/accept`,
+        `${import.meta.env.VITE_API_URL}/api/connections/${connectionId}/accept`,
         {
           method: "PUT",
           headers: {

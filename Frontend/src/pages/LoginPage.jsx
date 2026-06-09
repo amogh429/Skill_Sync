@@ -1,14 +1,10 @@
-import { useState } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
-import { useAuth } from '@/context/useAuth';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "@/context/useAuth";
 // import axios_api from '@/api/axios';
 
-
-
-
 const LoginPage = () => {
-
-  const [formData,setFormData] = useState({
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
@@ -16,8 +12,8 @@ const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [loading,setLoading] = useState(false);
-  const [error,setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,43 +25,44 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     setLoading(true);
     setError(null);
-    
-    try{
-      const res = await fetch('/api/auth/login',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
         },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      })
+      );
 
       const data = await res.json();
 
-
-
       console.log("Login response:", data);
 
-      if(!res.ok){
+      if (!res.ok) {
         throw new Error(data.message || "Something went wrong");
       }
 
       login(data);
-      navigate('/matches');
-    }catch(error) {
-      setError(error.message || 'Invalid email or password');
+      navigate("/matches");
+    } catch (error) {
+      setError(error.message || "Invalid email or password");
     } finally {
       setLoading(false);
     }
-  }
+  };
   return (
-     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-indigo-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-indigo-50 p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center items-center gap-3 mb-6">
@@ -87,7 +84,7 @@ const LoginPage = () => {
               Login to find your study matches
             </p>
           </div>
-           {/* Form */}
+          {/* Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* Email */}
             <div className="flex flex-col gap-1.5">
@@ -106,7 +103,7 @@ const LoginPage = () => {
               />
             </div>
 
-             {/* Password */}
+            {/* Password */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-slate-700">
                 Password
@@ -174,20 +171,18 @@ const LoginPage = () => {
             <Link
               to="/register"
               className="text-indigo-600 font-medium hover:text-indigo-700 hover:underline transition-colors"
-              >
+            >
               Sign up
             </Link>
           </p>
-          </div>
+        </div>
         {/* Footer text */}
         <p className="text-center text-xs text-slate-400 mt-6">
           SkillSync — Find your perfect study partner
         </p>
       </div>
     </div>
-);
-}
-
+  );
+};
 
 export default LoginPage;
-

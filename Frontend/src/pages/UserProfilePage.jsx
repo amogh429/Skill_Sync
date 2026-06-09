@@ -16,11 +16,14 @@ export default function UserProfilePage() {
 
   const fetchUserProfile = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/users/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
         },
-      });
+      );
 
       const data = await res.json(); // ✅ extract JSON first
 
@@ -45,12 +48,15 @@ export default function UserProfilePage() {
 
   const fetchConnectionStatus = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/connections", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/connections`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
         },
-      });
+      );
       const data = await res.json();
 
       if (!res.ok) {
