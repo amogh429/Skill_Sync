@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
-import Navbar from "../components/shared/Navbar";
+import Navbar from "../components/Shared/Navbar";
 import { useLocation } from "react-router-dom";
 
 export default function UserProfilePage() {
