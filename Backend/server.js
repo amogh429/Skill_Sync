@@ -1,34 +1,39 @@
 import express from "express";
 import dotenv from "dotenv";
-import cors from 'cors';
+import cors from "cors";
 import connectDB from "./config/db.js";
-import authRoutes from './routes/authRoutes.js';
-import { protect } from './middleware/authMiddleware.js';
-import  userRoutes  from './routes/userRoutes.js';
-import matchRoutes from './routes/matchRoutes.js';
-import connectionRoutes from './routes/connectionRoutes.js';
+import authRoutes from "./routes/authRoutes.js";
+import { protect } from "./middleware/authMiddleware.js";
+import userRoutes from "./routes/userRoutes.js";
+import matchRoutes from "./routes/matchRoutes.js";
+import connectionRoutes from "./routes/connectionRoutes.js";
 
 dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://skill-sync-s32g.vercel.app"],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users',userRoutes);
-app.use('/api/matches',matchRoutes);
-app.use('/api/connections',connectionRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/matches", matchRoutes);
+app.use("/api/connections", connectionRoutes);
 
-app.get('/api/protected', protect , (req,res) => {
-  res.json({message: `Hello ${req.user.name}, you are authorized`});
-})
+app.get("/api/protected", protect, (req, res) => {
+  res.json({ message: `Hello ${req.user.name}, you are authorized` });
+});
 
 // Base Routes
-app.get('/',(req,res) => {
-  res.send('SkillSync is running');
+app.get("/", (req, res) => {
+  res.send("SkillSync is running");
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT , () => console.log(`Server running on port ${PORT}`))
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
