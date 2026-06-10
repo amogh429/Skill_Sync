@@ -1,5 +1,5 @@
 // AuthProvider.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { AuthContext } from "./authContext";
 
 export const AuthProvider = ({ children }) => {
@@ -20,7 +20,10 @@ export const AuthProvider = ({ children }) => {
   // ✅ Login → store user + token
   const login = (data) => {
   setUser(data);
-  localStorage.setItem("user", JSON.stringify(data)); // ← this line must exist
+  localStorage.setItem("user", JSON.stringify(data));
+  if (data.token) {
+    localStorage.setItem("token", data.token);
+  }
 };
 
   // ✅ Logout → clear everything
