@@ -99,15 +99,12 @@ const ConnectionsPage = () => {
   // ─── Reject a connection request ──────────────────────────
   const handleReject = async (connectionId) => {
     try {
-      await axios.put(
-        `/api/connections/${connectionId}/reject`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      await axios.put(`/api/connections/${connectionId}/reject`,
+       {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
       setPendingRequests((prev) => prev.filter((c) => c._id !== connectionId));
     } catch (err) {
       setError(err.response?.data?.message || "Failed to reject request");
