@@ -109,9 +109,6 @@ const ProfileSetupPage = () => {
       setLoading(true);
       setError(null);
 
-      console.log("USER:", user);
-      console.log("TOKEN:", user?.token);
-
       if (!user?.token) {
         throw new Error("User token not found. Please login again.");
       }
