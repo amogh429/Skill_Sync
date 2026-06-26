@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import axios from "axios";
 
 const ProfileSetupPage = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,10 @@ const ProfileSetupPage = () => {
   const [goalInput, setGoalInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [extractText, setExtractText] = useState("");
+  const [extracting, setExtracting] = useState(false);
+  const [extractSuccess, setExtractSuccess] = useState(false);
+  const [extractError, setExtractError] = useState("");
 
   const navigate = useNavigate();
   const { login, user } = useAuth(); // ✅ get user for token
@@ -90,6 +95,61 @@ const ProfileSetupPage = () => {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleExtract = async () => {
+    if (!extractText.trim()) {
+      setExtractError("Please paste some text first");
+      return;
+    }
+
+    setExtracting(true);
+    setExtractError("");
+    setExtractSuccess(false);
+
+    try {
+      const response = await axios.post("/api/ai/extract-skills", {
+        text: extractText,
+      });
+
+      const { skills, learningGoals } = response.data;
+
+      // Deduplicate and merge skills (case-insensitive)
+      const existingSkillsLower = formData.skills.map((s) => s.toLowerCase());
+      const newSkills = skills.filter(
+        (skill) => !existingSkillsLower.includes(skill.toLowerCase()),
+      );
+
+      // Deduplicate and merge learning goals (case-insensitive)
+      const existingGoalsLower = formData.learningGoals.map((g) =>
+        g.toLowerCase(),
+      );
+      const newGoals = learningGoals.filter(
+        (goal) => !existingGoalsLower.includes(goal.toLowerCase()),
+      );
+
+      // Update form data with merged arrays
+      setFormData((prev) => ({
+        ...prev,
+        skills: [...prev.skills, ...newSkills],
+        learningGoals: [...prev.learningGoals, ...newGoals],
+      }));
+
+      // Show success message
+      setExtractSuccess(true);
+      setExtractText(""); // Clear the textarea
+
+      // Hide success message after 4 seconds
+      setTimeout(() => setExtractSuccess(false), 4000);
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "Failed to extract skills. Please try again.";
+      setExtractError(errorMessage);
+    } finally {
+      setExtracting(false);
+    }
   };
 
   // ================= SUBMIT =================
@@ -194,6 +254,128 @@ const ProfileSetupPage = () => {
             </div>
 
             {/* ── Divider ──────────────────────────────────── */}
+            <div className="border-t border-slate-100" />
+
+            {/* ── AI Skill Extraction Section ────────────────────── */}
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-semibold text-slate-700">
+                  Extract skills automatically
+                </label>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Paste your resume, LinkedIn summary or bio — AI will extract
+                  your skills
+                </p>
+              </div>
+
+              {/* Extract text area */}
+              <textarea
+                value={extractText}
+                onChange={(e) => setExtractText(e.target.value)}
+                rows={3}
+                placeholder="Paste your resume, LinkedIn summary or any text about your experience..."
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+              />
+
+              {/* Extract button */}
+              <button
+                type="button"
+                onClick={handleExtract}
+                disabled={extracting || !extractText.trim()}
+                className={`w-full h-11 rounded-xl font-medium text-sm transition-colors ${
+                  extracting || !extractText.trim()
+                    ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                    : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm"
+                }`}
+              >
+                {extracting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg
+                      className="animate-spin h-4 w-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8z"
+                      />
+                    </svg>
+                    Extracting skills...
+                  </span>
+                ) : (
+                  "Extract with AI"
+                )}
+              </button>
+
+              {/* Success message */}
+              {extractSuccess && (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-start gap-2">
+                  <svg
+                    className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <div>
+                    <p className="text-sm font-medium text-emerald-900">
+                      Skills extracted successfully!
+                    </p>
+                    <p className="text-xs text-emerald-700 mt-0.5">
+                      Review and edit before saving
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Error message */}
+              {extractError && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-start gap-2">
+                  <svg
+                    className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <div>
+                    <p className="text-sm font-medium text-red-900">
+                      Failed to extract skills
+                    </p>
+                    <p className="text-xs text-red-700 mt-0.5">
+                      {extractError}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Info box */}
+              <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3">
+                <p className="text-xs text-indigo-700">
+                  💡 <span className="font-medium">Tip:</span> You can still
+                  manually add or remove skills below after extraction.
+                </p>
+              </div>
+            </div>
+
+            {/* ── Divider ──────────────────────────────────────────── */}
             <div className="border-t border-slate-100" />
 
             {/* ── Skills ───────────────────────────────────── */}
