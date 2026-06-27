@@ -98,7 +98,7 @@ const ProfileSetupPage = () => {
   };
 
   const handleExtract = async () => {
-    console.log("Axios Base URL:", axios_api.defaults.baseURL);
+    // console.log("Axios Base URL:", axios_api.defaults.baseURL);
     if (!extractText.trim()) {
       setExtractError("Please paste some text first");
       return;

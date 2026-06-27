@@ -47,7 +47,7 @@ const LoginPage = () => {
 
       const data = await res.json();
 
-      console.log("Login response:", data);
+      // console.log("Login response:", data);
 
       if (!res.ok) {
         throw new Error(data.message || "Something went wrong");
