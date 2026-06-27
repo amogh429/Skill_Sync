@@ -4,12 +4,8 @@ const client = new OpenAI({
   apiKey: process.env.OpenAI_API_KEY,
 });
 
-export default extractSkillsFormText = async (text) => {
+export const extractSkillsFromText = async (text) => {
   try {
-    if (text || !text.trim()) {
-      throw new Error("Input text is required");
-    }
-
     const completion = await client.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
