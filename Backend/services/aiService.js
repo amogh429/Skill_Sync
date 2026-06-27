@@ -62,10 +62,10 @@ export const extractSkillsFromText = async (text) => {
 
     return {
       skills: result.skills || [],
-      goals: result.goals || [],
+      learningGoals: result.goals || [],
     };
   } catch (error) {
-  console.error("Gemini Error:", error);
-  throw error;
-}
+    console.error("Gemini Error:", error);
+    throw error;
+  }
 };
