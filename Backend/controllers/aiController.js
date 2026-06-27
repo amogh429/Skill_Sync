@@ -29,9 +29,9 @@ export const extractSkills = async (req, res) => {
 
     // Return extracted skills and goals
     return res.status(200).json({
-      skills: result.skills,
-      learningGoals: result.learningGoals,
-      message: `Extracted ${result.skills.length} skills and ${result.learningGoals.length} learning goals`,
+      skills: extractedData.skills,
+      learningGoals: extractedData.learningGoals,
+      message: `Extracted ${extractedData.skills.length} skills and ${extractedData.learningGoals.length} learning goals`,
     });
   } catch (error) {
     console.error("Error extracting skills:", error);
