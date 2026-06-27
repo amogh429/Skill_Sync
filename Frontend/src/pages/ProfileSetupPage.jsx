@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
-import axios from "axios";
+import axios_api from "../utils/axios";
 
 const ProfileSetupPage = () => {
   const [formData, setFormData] = useState({
@@ -108,7 +108,7 @@ const ProfileSetupPage = () => {
     setExtractSuccess(false);
 
     try {
-      const response = await axios.post("/api/ai/extract-skills", {
+      const response = await axios_api.post("/api/ai/extract-skills", {
         text: extractText,
       });
 
