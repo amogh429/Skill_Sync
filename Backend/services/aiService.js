@@ -55,7 +55,7 @@ export const extractSkillsFromText = async (text) => {
       .trim();
 
     if (!content) {
-      throw new Error("No response received from OpenAI");
+      throw new Error("No response received from Gemini");
     }
 
     const result = JSON.parse(cleaned);
@@ -65,6 +65,7 @@ export const extractSkillsFromText = async (text) => {
       goals: result.goals || [],
     };
   } catch (error) {
-    throw new Error(error.message || "Failed to extract skills and goals");
-  }
+  console.error("Gemini Error:", error);
+  throw error;
+}
 };
