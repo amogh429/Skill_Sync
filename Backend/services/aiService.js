@@ -1,17 +1,12 @@
 import { GoogleGenAI } from "@google/genai";
 
-const client = new OpenAI({
+const client = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
 export const extractSkillsFromText = async (text) => {
   try {
-    const completion = await client.chat.completions.create({
-      model: "gemini-2.5-flash-lite",
-      messages: [
-        {
-          role: "system",
-          content: `
+    const systemPrompt = `
                                 You are an AI assistant that extracts professional information from user-provided text.
 
                                 Your task is to analyze the input text and identify:
@@ -46,22 +41,24 @@ export const extractSkillsFromText = async (text) => {
 
                                 Never return anything except the JSON object.
 
-                    `,
-        },
-        {
-          role: "user",
-          content: text,
-        },
-      ],
-      temperature: 0.2,
+                    `;
+
+    const response = await client.models.generateContent({
+      model: "gemini-2.5-flash-lite",
+      contents: `${systemPrompt}\n\nText:\n${text}`,
     });
-    const content = completion.choices[0]?.message?.content;
+    const content = response.text.trim();
+
+    const cleaned = content
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
 
     if (!content) {
       throw new Error("No response received from OpenAI");
     }
 
-    const result = JSON.parse(content);
+    const result = JSON.parse(cleaned);
 
     return {
       skills: result.skills || [],
