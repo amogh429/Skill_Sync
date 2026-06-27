@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
-import axios_api from "../utils/axios";
+import axios_api from "../api/axios";
+
 
 const ProfileSetupPage = () => {
   const [formData, setFormData] = useState({
