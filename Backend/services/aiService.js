@@ -1,13 +1,13 @@
-import OpenAI from "openai";
+import { GoogleGenAI } from "@google/genai";
 
 const client = new OpenAI({
-  apiKey: process.env.OpenAI_API_KEY,
+  apiKey: process.env.GEMINI_API_KEY,
 });
 
 export const extractSkillsFromText = async (text) => {
   try {
     const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gemini-2.5-flash-lite",
       messages: [
         {
           role: "system",
